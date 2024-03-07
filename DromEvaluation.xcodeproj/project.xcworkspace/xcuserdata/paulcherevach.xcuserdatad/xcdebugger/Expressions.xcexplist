@@ -3,15 +3,6 @@
    version = "1.0">
    <ContextStates>
       <ContextState
-         contextName = "-[SceneDelegate scene:willConnectToSession:options:]:SceneDelegate.m">
-      </ContextState>
-      <ContextState
-         contextName = "-[CustomUICollectionViewLayout prepareLayout]:CustomUICollectionViewLayout.m">
-      </ContextState>
-      <ContextState
-         contextName = "main:main.m">
-      </ContextState>
-      <ContextState
          contextName = "__72-[ImagesCollectionViewController collectionView:cellForItemAtIndexPath:]_block_invoke_2:ImagesCollectionViewController.m">
          <PersistentStrings>
             <PersistentString
@@ -20,15 +11,35 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
+         contextName = "-[ImagesCollectionViewController collectionView:didSelectItemAtIndexPath:]:ImagesCollectionViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[indexPath debugDescription]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[CustomUICollectionViewLayout prepareLayout]:CustomUICollectionViewLayout.m">
+      </ContextState>
+      <ContextState
+         contextName = "main:main.m">
+      </ContextState>
+      <ContextState
          contextName = "-[ImagesCollectionViewController collectionView:cellForItemAtIndexPath:]:ImagesCollectionViewController.m">
          <PersistentStrings>
             <PersistentString
-               value = "collectionView.delegate">
-            </PersistentString>
-            <PersistentString
                value = "collectionView.dataSource">
             </PersistentString>
+            <PersistentString
+               value = "collectionView.delegate">
+            </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[ImagesCollectionViewController initCollectionViewDiffableDataSource]:ImagesCollectionViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[SceneDelegate scene:willConnectToSession:options:]:SceneDelegate.m">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

@@ -25,4 +25,14 @@ static UICollectionViewCell *cell;
     return [[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:completionHandler];
 }
 
++ (void)invalidateCachedRequest:(nonnull NSURLRequest *)request {
+    NSURLCache *sharedCache = [NSURLCache sharedURLCache];
+    [sharedCache removeCachedResponseForRequest:request];
+}
+
++ (void)invalidateAllCachedRequests {
+    NSURLCache *sharedCache = [NSURLCache sharedURLCache];
+    [sharedCache removeAllCachedResponses];
+}
+
 @end

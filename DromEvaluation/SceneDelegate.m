@@ -24,9 +24,6 @@
     
     UICollectionViewController * imagesCollectionViewController = [[ImagesCollectionViewController alloc] initWithCollectionViewLayout:[CollectionViewLayoutProvider customLayout] imagesSource:[[ImagesLinksStubSource alloc] init]];
     
-    UIRefreshControl * refreshControl = [[UIRefreshControl alloc] init];
-    imagesCollectionViewController.collectionView.refreshControl = refreshControl;
-    
     UINavigationController * rootNavigationController = [[RootNavigationController alloc] initWithRootViewController:imagesCollectionViewController];
     self.window.rootViewController = rootNavigationController;
     [self.window makeKeyAndVisible];

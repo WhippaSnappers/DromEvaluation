@@ -15,6 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSURL *)buildURLFromString:(NSString *)string;
 + (NSURLRequest *)buildRequestFromURL:(NSURL *)url;
 + (NSURLSessionDataTask *)buildImageDownloadingTaskFromRequest:(NSURLRequest *)request completionHandler:(DownloadingTaskCompletionHandlerBlock) completionHandler;
++ (void)invalidateCachedRequest:(NSURLRequest *)request;
++ (void)invalidateAllCachedRequests;
 
 @end
 

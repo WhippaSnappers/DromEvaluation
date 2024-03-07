@@ -8,7 +8,6 @@
 #import "ImagesCollectionViewController.h"
 #import "ImagesLinksSource.h"
 #import "ImagesLinksStubSource.h"
-#import "CellProviderBlock.h"
 #import "NetworkingHelper.h"
 
 @interface ImagesCollectionViewController ()
@@ -24,56 +23,66 @@
     self = [super initWithCollectionViewLayout:layout];
     if (self) {
         _imagesSource = imagesSource;
-        [self initCollectionViewDiffableDataSource];
+        UIRefreshControl * refreshControl = [[UIRefreshControl alloc] init];
+        [refreshControl addTarget:self action:@selector(refreshControlPulled) forControlEvents:UIControlEventValueChanged];
+        self.collectionView.refreshControl = refreshControl;
     }
     return self;
 }
 
-- (void)initCollectionViewDiffableDataSource {
-
+- (void)restoreCollectionContents {
+    NSDiffableDataSourceSnapshot<NSNumber *, NSString *> *imagesSnapshot = [[NSDiffableDataSourceSnapshot alloc] init];
+    [imagesSnapshot appendSectionsWithIdentifiers: @[@0]];
+    [imagesSnapshot appendItemsWithIdentifiers:_imagesSource.images];
+    [_dataSource applySnapshot: imagesSnapshot animatingDifferences:YES];
+    [self.collectionView.refreshControl endRefreshing];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"Cell"];
-    self.collectionView.backgroundColor = UIColor.cyanColor;
-    _dataSource = [[UICollectionViewDiffableDataSource alloc] initWithCollectionView:self.collectionView cellProvider: cellProviderBlock];
+    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"ImageCell"];
+    _dataSource = [[UICollectionViewDiffableDataSource alloc] initWithCollectionView:self.collectionView cellProvider: [self makeCellProviderBlock]];
     self.collectionView.dataSource = _dataSource;
-    NSDiffableDataSourceSnapshot<NSNumber *, NSNumber *> *imagesSnapshot = [[NSDiffableDataSourceSnapshot alloc] init];
-    [imagesSnapshot appendSectionsWithIdentifiers: @[@0]];
-    [imagesSnapshot appendItemsWithIdentifiers:@[@0] intoSectionWithIdentifier:@0];
-    [_dataSource applySnapshot: imagesSnapshot animatingDifferences:NO];
+    self.collectionView.backgroundColor = UIColor.cyanColor;
+    [self restoreCollectionContents];
+}
+
+- (UICollectionViewDiffableDataSourceCellProvider)makeCellProviderBlock {
+    return ^UICollectionViewCell * _Nullable (UICollectionView *collectionView, NSIndexPath *indexPath, id itemIdentifier) {
+        UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ImageCell" forIndexPath:indexPath];
+        
+        DownloadingTaskCompletionHandlerBlock completionHandler = ^void(NSData * data, NSURLResponse * response, NSError * error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIImage * img = [UIImage imageWithData:data];
+                UIImageView * imgView = [[UIImageView alloc] initWithImage:img];
+                cell.backgroundView = imgView;
+            });
+        };
+        NSString *imageURLString = (NSString *)itemIdentifier;
+        NSURLSessionDataTask * imageDownloadingTask = [NetworkingHelper buildImageDownloadingTaskFromRequest:[NetworkingHelper buildRequestFromURL:[NetworkingHelper buildURLFromString:imageURLString]] completionHandler:completionHandler];
+        [imageDownloadingTask resume];
+        
+        return cell;
+    };
 }
 
 #pragma mark <UICollectionViewDelegate>
 
-/*
-// Uncomment this method to specify if the specified item should be highlighted during tracking
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
-	return YES;
-}
-*/
-
-/*
-// Uncomment this method to specify if the specified item should be selected
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-*/
-
-/*
-// Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldShowMenuForItemAtIndexPath:(NSIndexPath *)indexPath {
-	return NO;
+- (void)collectionView:(UICollectionView *)collectionView
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewDiffableDataSource *dataSource = (UICollectionViewDiffableDataSource *)collectionView.dataSource;
+    NSDiffableDataSourceSnapshot<NSNumber *, NSString *> *currentSnapshot = dataSource.snapshot;
+    NSString *itemIdentifier = [dataSource itemIdentifierForIndexPath:indexPath];
+    [NetworkingHelper invalidateCachedRequest: [NetworkingHelper buildRequestFromURL:[NetworkingHelper buildURLFromString:itemIdentifier]]];
+    [currentSnapshot deleteItemsWithIdentifiers:@[itemIdentifier]];
+    [(UICollectionViewDiffableDataSource *)collectionView.dataSource applySnapshot:currentSnapshot animatingDifferences:YES];
 }
 
-- (BOOL)collectionView:(UICollectionView *)collectionView canPerformAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	return NO;
-}
+#pragma mark UIRefreshControl action
 
-- (void)collectionView:(UICollectionView *)collectionView performAction:(SEL)action forItemAtIndexPath:(NSIndexPath *)indexPath withSender:(id)sender {
-	
+- (void)refreshControlPulled {
+    [NetworkingHelper invalidateAllCachedRequests];
+    [self restoreCollectionContents];
 }
-*/
 
 @end
