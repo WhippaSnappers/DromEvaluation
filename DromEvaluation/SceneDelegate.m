@@ -8,8 +8,8 @@
 #import "SceneDelegate.h"
 #import "RootNavigationController.h"
 #import "ImagesCollectionViewController.h"
-#import "CollectionViewLayoutProvider.h"
 #import "ImagesLinksStubSource.h"
+#import "CollectionViewCustomLayout.h"
 
 @interface SceneDelegate ()
 
@@ -22,7 +22,7 @@
     UIWindowScene * sceneCapture = (UIWindowScene *)scene;
     self.window = [[UIWindow alloc] initWithWindowScene: sceneCapture];
     
-    UICollectionViewController * imagesCollectionViewController = [[ImagesCollectionViewController alloc] initWithCollectionViewLayout:[CollectionViewLayoutProvider customLayout] imagesSource:[[ImagesLinksStubSource alloc] init]];
+    UICollectionViewController * imagesCollectionViewController = [[ImagesCollectionViewController alloc] initWithCollectionViewLayout:[[CollectionViewCustomLayout alloc] initLayout] imagesSource:[[ImagesLinksStubSource alloc] init]];
     
     UINavigationController * rootNavigationController = [[RootNavigationController alloc] initWithRootViewController:imagesCollectionViewController];
     self.window.rootViewController = rootNavigationController;

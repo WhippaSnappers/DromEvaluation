@@ -9,6 +9,7 @@
 #import "ImagesLinksSource.h"
 #import "ImagesLinksStubSource.h"
 #import "NetworkingHelper.h"
+#import "CollectionViewCustomLayout.h"
 
 @interface ImagesCollectionViewController ()
 
@@ -31,10 +32,13 @@
 }
 
 - (void)restoreCollectionContents {
-    NSDiffableDataSourceSnapshot<NSNumber *, NSString *> *imagesSnapshot = [[NSDiffableDataSourceSnapshot alloc] init];
+    NSDiffableDataSourceSnapshot<NSNumber *, NSString *> *imagesSnapshot = [_dataSource snapshot];
+    [imagesSnapshot deleteAllItems];
     [imagesSnapshot appendSectionsWithIdentifiers: @[@0]];
     [imagesSnapshot appendItemsWithIdentifiers:_imagesSource.images];
-    [_dataSource applySnapshot: imagesSnapshot animatingDifferences:YES];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^(void) {
+        [self->_dataSource applySnapshot:imagesSnapshot animatingDifferences:YES];
+    });
     [self.collectionView.refreshControl endRefreshing];
 }
 
@@ -47,13 +51,45 @@
     [self restoreCollectionContents];
 }
 
+#pragma mark <UICollectionViewDelegate>
+
+- (void)collectionView:(UICollectionView *)collectionView
+didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    UICollectionViewLayoutAttributes *crutchAttributes = [self.collectionView layoutAttributesForItemAtIndexPath:indexPath];
+//    Used particularly to animate the tail element being deleted since its attributes are, for some reason, gone right after the new snapshot is applied
+    ((CollectionViewCustomLayout *)self.collectionView.collectionViewLayout).crutchLastKnownItemAttributes = crutchAttributes;
+    
+    NSString *itemIdentifier = [_dataSource itemIdentifierForIndexPath:indexPath];
+    [NetworkingHelper invalidateCachedRequest: [NetworkingHelper buildRequestFromURL:[NetworkingHelper buildURLFromString:itemIdentifier]]];
+    
+    NSDiffableDataSourceSnapshot<NSNumber *, NSString *> *currentSnapshot = [_dataSource snapshot];
+    [currentSnapshot deleteItemsWithIdentifiers:@[itemIdentifier]];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^(void) {
+        [self->_dataSource applySnapshot:currentSnapshot animatingDifferences:YES];
+    });
+}
+
+#pragma mark UIRefreshControl action
+
+- (void)refreshControlPulled {
+    [NetworkingHelper invalidateAllCachedRequests];
+    NSDiffableDataSourceSnapshot<NSNumber *, NSString *> *currentSnapshot = [_dataSource snapshot];
+    [currentSnapshot deleteAllItems];
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^(void) {
+        [self->_dataSource applySnapshot:currentSnapshot animatingDifferences:YES];
+    });
+    [self restoreCollectionContents];
+}
+
+#pragma mark CellProviderBlock
+
 - (UICollectionViewDiffableDataSourceCellProvider)makeCellProviderBlock {
     return ^UICollectionViewCell * _Nullable (UICollectionView *collectionView, NSIndexPath *indexPath, id itemIdentifier) {
         UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"ImageCell" forIndexPath:indexPath];
         
         DownloadingTaskCompletionHandlerBlock completionHandler = ^void(NSData * data, NSURLResponse * response, NSError * error) {
+            UIImage * img = [UIImage imageWithData:data];
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIImage * img = [UIImage imageWithData:data];
                 UIImageView * imgView = [[UIImageView alloc] initWithImage:img];
                 cell.backgroundView = imgView;
             });
@@ -64,25 +100,6 @@
         
         return cell;
     };
-}
-
-#pragma mark <UICollectionViewDelegate>
-
-- (void)collectionView:(UICollectionView *)collectionView
-didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewDiffableDataSource *dataSource = (UICollectionViewDiffableDataSource *)collectionView.dataSource;
-    NSDiffableDataSourceSnapshot<NSNumber *, NSString *> *currentSnapshot = dataSource.snapshot;
-    NSString *itemIdentifier = [dataSource itemIdentifierForIndexPath:indexPath];
-    [NetworkingHelper invalidateCachedRequest: [NetworkingHelper buildRequestFromURL:[NetworkingHelper buildURLFromString:itemIdentifier]]];
-    [currentSnapshot deleteItemsWithIdentifiers:@[itemIdentifier]];
-    [(UICollectionViewDiffableDataSource *)collectionView.dataSource applySnapshot:currentSnapshot animatingDifferences:YES];
-}
-
-#pragma mark UIRefreshControl action
-
-- (void)refreshControlPulled {
-    [NetworkingHelper invalidateAllCachedRequests];
-    [self restoreCollectionContents];
 }
 
 @end

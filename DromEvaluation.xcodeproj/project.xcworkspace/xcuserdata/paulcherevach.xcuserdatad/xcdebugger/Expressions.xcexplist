@@ -11,10 +11,10 @@
          </PersistentStrings>
       </ContextState>
       <ContextState
-         contextName = "-[ImagesCollectionViewController collectionView:didSelectItemAtIndexPath:]:ImagesCollectionViewController.m">
+         contextName = "-[CollectionViewCustomLayout finalLayoutAttributesForDisappearingItemAtIndexPath:]:CollectionViewCustomLayout.m">
          <PersistentStrings>
             <PersistentString
-               value = "[indexPath debugDescription]">
+               value = "[currentIndexPath debugDescription]">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -37,6 +37,17 @@
       </ContextState>
       <ContextState
          contextName = "-[ImagesCollectionViewController initCollectionViewDiffableDataSource]:ImagesCollectionViewController.m">
+      </ContextState>
+      <ContextState
+         contextName = "-[ImagesCollectionViewController collectionView:didSelectItemAtIndexPath:]:ImagesCollectionViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "[dataSource applySnapshot:currentSnapshot animatingDifferences:YES]">
+            </PersistentString>
+            <PersistentString
+               value = "[indexPath debugDescription]">
+            </PersistentString>
+         </PersistentStrings>
       </ContextState>
       <ContextState
          contextName = "-[SceneDelegate scene:willConnectToSession:options:]:SceneDelegate.m">

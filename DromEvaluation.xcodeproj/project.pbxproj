@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AA7FF9622B98C8C900112D64 /* CollectionViewLayoutProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7FF9612B98C8C900112D64 /* CollectionViewLayoutProvider.m */; };
 		AA7FF9662B997FEB00112D64 /* NetworkingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7FF9652B997FEB00112D64 /* NetworkingHelper.m */; };
+		AA7FF96F2B99C6D200112D64 /* CollectionViewCustomLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = AA7FF96E2B99C6D200112D64 /* CollectionViewCustomLayout.m */; };
 		AAE2BC1A2B95B441004F291C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE2BC192B95B441004F291C /* AppDelegate.m */; };
 		AAE2BC1D2B95B441004F291C /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AAE2BC1C2B95B441004F291C /* SceneDelegate.m */; };
 		AAE2BC252B95B443004F291C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AAE2BC242B95B443004F291C /* Assets.xcassets */; };
@@ -20,12 +20,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AA7FF9602B98C8C900112D64 /* CollectionViewLayoutProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewLayoutProvider.h; sourceTree = "<group>"; };
-		AA7FF9612B98C8C900112D64 /* CollectionViewLayoutProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewLayoutProvider.m; sourceTree = "<group>"; };
 		AA7FF9632B99618300112D64 /* ImagesLinksSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ImagesLinksSource.h; path = ../../../../ImagesLinksSource.h; sourceTree = "<group>"; };
 		AA7FF9642B997FEB00112D64 /* NetworkingHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkingHelper.h; sourceTree = "<group>"; };
 		AA7FF9652B997FEB00112D64 /* NetworkingHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworkingHelper.m; sourceTree = "<group>"; };
 		AA7FF96B2B99916700112D64 /* Typedefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Typedefs.h; path = ../../../../Typedefs.h; sourceTree = "<group>"; };
+		AA7FF96D2B99C6D200112D64 /* CollectionViewCustomLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewCustomLayout.h; sourceTree = "<group>"; };
+		AA7FF96E2B99C6D200112D64 /* CollectionViewCustomLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCustomLayout.m; sourceTree = "<group>"; };
 		AAE2BC152B95B441004F291C /* DromEvaluation.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DromEvaluation.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AAE2BC182B95B441004F291C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		AAE2BC192B95B441004F291C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -66,8 +66,8 @@
 		AA7FF9672B99816E00112D64 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				AA7FF9602B98C8C900112D64 /* CollectionViewLayoutProvider.h */,
-				AA7FF9612B98C8C900112D64 /* CollectionViewLayoutProvider.m */,
+				AA7FF96D2B99C6D200112D64 /* CollectionViewCustomLayout.h */,
+				AA7FF96E2B99C6D200112D64 /* CollectionViewCustomLayout.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -208,12 +208,12 @@
 			files = (
 				AA7FF9662B997FEB00112D64 /* NetworkingHelper.m in Sources */,
 				AAE2BC472B9704E9004F291C /* ImagesLinksStubSource.m in Sources */,
-				AA7FF9622B98C8C900112D64 /* CollectionViewLayoutProvider.m in Sources */,
 				AAE2BC1A2B95B441004F291C /* AppDelegate.m in Sources */,
 				AAE2BC372B95C9B9004F291C /* ImagesCollectionViewController.m in Sources */,
 				AAE2BC2B2B95B443004F291C /* main.m in Sources */,
 				AAE2BC3A2B95CEB7004F291C /* RootNavigationController.m in Sources */,
 				AAE2BC1D2B95B441004F291C /* SceneDelegate.m in Sources */,
+				AA7FF96F2B99C6D200112D64 /* CollectionViewCustomLayout.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
