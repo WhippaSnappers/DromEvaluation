@@ -10,6 +10,7 @@
 #import "ImagesLinksStubSource.h"
 #import "NetworkingHelper.h"
 #import "CollectionViewCustomLayout.h"
+#import "ImageCollectionViewCell.h"
 
 @interface ImagesCollectionViewController ()
 
@@ -44,10 +45,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"ImageCell"];
+    [self.collectionView registerClass:[ImageCollectionViewCell class] forCellWithReuseIdentifier:@"ImageCell"];
     _dataSource = [[UICollectionViewDiffableDataSource alloc] initWithCollectionView:self.collectionView cellProvider: [self makeCellProviderBlock]];
     self.collectionView.dataSource = _dataSource;
-    self.collectionView.backgroundColor = UIColor.cyanColor;
+    self.collectionView.backgroundColor = UIColor.systemTealColor;
     [self restoreCollectionContents];
 }
 
@@ -55,18 +56,33 @@
 
 - (void)collectionView:(UICollectionView *)collectionView
 didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    UICollectionViewLayoutAttributes *crutchAttributes = [self.collectionView layoutAttributesForItemAtIndexPath:indexPath];
-//    Used particularly to animate the tail element being deleted since its attributes are, for some reason, gone right after the new snapshot is applied
-    ((CollectionViewCustomLayout *)self.collectionView.collectionViewLayout).crutchLastKnownItemAttributes = crutchAttributes;
+    UICollectionViewCell *selectedItemCell = [collectionView cellForItemAtIndexPath:indexPath];
+    NSUInteger animationDuration = 1;
+    static BOOL busy;
+    if (busy) return;
+    busy = true;
     
-    NSString *itemIdentifier = [_dataSource itemIdentifierForIndexPath:indexPath];
-    [NetworkingHelper invalidateCachedRequest: [NetworkingHelper buildRequestFromURL:[NetworkingHelper buildURLFromString:itemIdentifier]]];
-    
-    NSDiffableDataSourceSnapshot<NSNumber *, NSString *> *currentSnapshot = [_dataSource snapshot];
-    [currentSnapshot deleteItemsWithIdentifiers:@[itemIdentifier]];
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^(void) {
-        [self->_dataSource applySnapshot:currentSnapshot animatingDifferences:YES];
-    });
+    [self.collectionView performBatchUpdates:^void {
+        [UIView animateWithDuration:animationDuration animations:^void {
+            CGPoint newPoint = CGPointMake(collectionView.bounds.size.width - 1, selectedItemCell.center.y);
+            selectedItemCell.anchorPoint = CGPointMake(0, 0.5);
+            selectedItemCell.center = newPoint;
+        }];
+    } completion:^void(BOOL completed) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(animationDuration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            selectedItemCell.hidden = YES;
+            
+            NSString *itemIdentifier = [self->_dataSource itemIdentifierForIndexPath:indexPath];
+            [NetworkingHelper invalidateCachedRequest: [NetworkingHelper buildRequestFromURL:[NetworkingHelper buildURLFromString:itemIdentifier]]];
+            
+            NSDiffableDataSourceSnapshot<NSNumber *, NSString *> *currentSnapshot = [self->_dataSource snapshot];
+            [currentSnapshot deleteItemsWithIdentifiers:@[itemIdentifier]];
+            dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0), ^(void) {
+                [self->_dataSource applySnapshot:currentSnapshot animatingDifferences:YES];
+            });
+            busy = NO;
+        });
+    }];
 }
 
 #pragma mark UIRefreshControl action

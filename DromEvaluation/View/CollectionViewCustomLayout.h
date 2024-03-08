@@ -11,10 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface CollectionViewCustomLayout : UICollectionViewCompositionalLayout
 
-@property(strong) UICollectionViewLayoutAttributes *crutchLastKnownItemAttributes;
-
 - (UICollectionViewLayout *)initLayout;
-- (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath;
 
 @end
 

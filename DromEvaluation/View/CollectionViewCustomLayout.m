@@ -26,17 +26,4 @@
     return self;
 }
 
-- (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
-    [super finalLayoutAttributesForDisappearingItemAtIndexPath:itemIndexPath];
-    UICollectionViewLayoutAttributes *currentAttributes = [self.collectionView layoutAttributesForItemAtIndexPath:itemIndexPath];
-    if (!currentAttributes) currentAttributes = self.crutchLastKnownItemAttributes;
-    
-    CGPoint currentPoint = currentAttributes.center;
-    CGAffineTransform translation = CGAffineTransformMakeTranslation(self.collectionViewContentSize.width, 0);
-    CGPoint newPoint = CGPointApplyAffineTransform(currentPoint, translation);
-    currentAttributes.center = newPoint;
-    
-    return currentAttributes;
-}
-
 @end
