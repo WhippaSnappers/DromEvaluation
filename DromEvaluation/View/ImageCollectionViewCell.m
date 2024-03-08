@@ -13,7 +13,10 @@
     [super prepareForReuse];
     self.anchorPoint = CGPointMake(0.5, 0.5);
     self.hidden = NO;
-    self.backgroundConfiguration = nil;
+    
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleMedium];
+    [spinner startAnimating];
+    self.backgroundView = spinner;
 }
 
 @end
