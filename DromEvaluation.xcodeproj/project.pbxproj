@@ -21,10 +21,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AA7FF9632B99618300112D64 /* ImagesLinksSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ImagesLinksSource.h; path = ../../../../ImagesLinksSource.h; sourceTree = "<group>"; };
+		AA7FF9632B99618300112D64 /* ImagesLinksSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImagesLinksSource.h; sourceTree = "<group>"; };
 		AA7FF9642B997FEB00112D64 /* NetworkingHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NetworkingHelper.h; sourceTree = "<group>"; };
 		AA7FF9652B997FEB00112D64 /* NetworkingHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NetworkingHelper.m; sourceTree = "<group>"; };
-		AA7FF96B2B99916700112D64 /* Typedefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Typedefs.h; path = ../../../../Typedefs.h; sourceTree = "<group>"; };
+		AA7FF96B2B99916700112D64 /* Typedefs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Typedefs.h; sourceTree = "<group>"; };
 		AA7FF96D2B99C6D200112D64 /* CollectionViewCustomLayout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CollectionViewCustomLayout.h; sourceTree = "<group>"; };
 		AA7FF96E2B99C6D200112D64 /* CollectionViewCustomLayout.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCustomLayout.m; sourceTree = "<group>"; };
 		AA7FF9732B9AE8C100112D64 /* ImageCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ImageCollectionViewCell.h; sourceTree = "<group>"; };
